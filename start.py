@@ -3,6 +3,8 @@ from pathlib import Path
 import importlib.util,os,subprocess,sys,venv
 ROOT=Path(__file__).resolve().parent
 def main():
+    for stream in [sys.stdout,sys.stderr]:
+        if hasattr(stream,'reconfigure'):stream.reconfigure(encoding='utf-8')
     if sys.version_info<(3,10):raise SystemExit('Please install Python 3.10 or newer (64-bit).')
     env_python=ROOT/'.venv'/('Scripts/python.exe' if os.name=='nt' else 'bin/python')
     in_env=Path(sys.prefix).resolve()==(ROOT/'.venv').resolve()

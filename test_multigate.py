@@ -1,6 +1,7 @@
 """Geometry, vehicle speed, local gate scenarios and C-core fault regression."""
 from pathlib import Path
-import json,math,time
+import json,math,time,sys
+if hasattr(sys.stdout,'reconfigure'):sys.stdout.reconfigure(encoding='utf-8')
 import numpy as np
 from simulation import Simulation,validate
 from native_core import NativeCore
