@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>多元素电磁门 · 黑白赛道仿真</title><link rel="icon" href="data:,"><link rel="stylesheet" href="style.css">
+<script type="importmap">{"imports":{"three":"./vendor/three.module.js"}}</script></head>
+<body>
+<header><div class="brand"><span class="mark">G</span><div><b>断路电磁门</b><small>车模控制与磁接收仿真台</small></div></div><div class="top-status"><a href="/manual.html" target="_blank" rel="noopener">完整中文教程</a><span class="dot"></span><span id="coreState">连接本地仿真服务</span><span class="divider"></span><span>5 ms 固定步长</span><span id="modelState">载入车模</span></div></header>
+<main>
+<aside class="settings">
+<div class="eyebrow">测试设置</div><label>赛道<select id="course"><option value="room">房间地图 · 多元素电磁门</option><option value="reference_2026">参考图复建 + 电磁门 · 约38.45m</option><option value="closed">自由闭环 · 双圆环 / Ω / 十字</option><option value="gate_only">独立电磁门与断口</option></select></label><label>控制器<select id="controller"><option value="user_code" disabled>用户导入代码</option><option value="native_c">实际 C 核心 · CarCore.c</option><option value="route_demo">整圈路线演示 · 使用理想路线</option><option value="sensor_reference">传感器参考控制器</option><option value="manual">手动转向与车速</option></select></label>
+<details class="code-import" open><summary>导入自己的控制代码</summary>
+<label class="upload">选择 Python / C / C++ / ZIP<input id="controllerFile" type="file" accept=".py,.c,.cpp,.zip"></label>
+<p id="controllerImportStatus" class="micro">尚未导入。代码在本机运行，请选择你信任的源文件。</p>
+<div class="template-links"><a href="/templates/controller.py" download>Python示例</a> <a href="/templates/c-project.zip" download>C示例包</a> <a href="/templates/code-import.md" download>接口说明</a></div>
+<button id="removeController" class="text-button">移除已导入代码</button></details>
+<label>门位布置（房间图）<select id="gate_mode"><option value="all">全部可用门位</option><option value="left_ring">左圆环内</option><option value="right_ring">右圆环内</option><option value="omega">Ω弯内</option><option value="s_bend">S弯</option><option value="hairpin">回头弯</option><option value="cross">正十字出口</option><option value="diagonal">斜十字接近段</option><option value="ramp">坡道出口段</option><option value="obstacle">路障接近段</option><option value="straight">下方直道</option><option value="original">原电磁门直道</option><option value="none">不放门</option></select></label>
+<label>起跑方式<select id="start_mode"><option value="lap">从起点跑整圈</option><option value="gate">从选中门前1米起跑</option></select></label>
+<label>门激励方式<select id="field_mode"><option value="nearest">只激励当前附近门</option><option value="all">全部门同时激励 · 干扰测试</option></select></label>
+<div class="pair"><button id="speedNormal" class="secondary">常速 1×</button><button id="speedFast" class="secondary">快速 1.6×</button></div>
+<label>测试工况<select id="scenario"><option value="nominal">对中穿门 · 仿真标定</option><option value="offset">偏移与偏航</option><option value="weak">弱磁 / 无磁停车</option><option value="saturation">接收前端饱和</option><option value="delay">高延迟</option><option value="camera">相机帧中断</option><option value="kill">紧急停止</option><option value="defaults">源码门限 160 · 高增益</option></select></label>
+<div class="section-label">车辆与初始位置</div>
+<label class="range-label">车速倍率 <output data-for="speed_scale"></output><input id="speed_scale" type="range" min="0.2" max="3.5" step="0.1"></label>
+<label class="range-label">横向偏移 / m <output data-for="start_y"></output><input id="start_y" type="range" min="-0.25" max="0.25" step="0.01"></label>
+<label class="range-label">起始偏航 / ° <output data-for="start_yaw_deg"></output><input id="start_yaw_deg" type="range" min="-20" max="20" step="1"></label>
+<div class="section-label">磁接收</div>
+<label class="range-label">门线圈激励 / A·匝 <output data-for="gate_ampere_turns"></output><input id="gate_ampere_turns" type="range" min="0" max="100" step="1"></label>
+<label class="range-label">接收增益 <output data-for="receiver_gain"></output><input id="receiver_gain" type="range" min="1" max="80" step="1"></label>
+<label class="range-label">有效幅值和门限 <output data-for="mag_min_sum"></output><input id="mag_min_sum" type="range" min="10" max="600" step="10"></label>
+<label class="range-label">噪声 / ADC计数 <output data-for="noise_adc"></output><input id="noise_adc" type="range" min="0" max="100" step="1"></label>
+<label class="range-label">采样延迟 / ms <output data-for="sensor_delay_ms"></output><input id="sensor_delay_ms" type="range" min="0" max="250" step="5"></label>
+<details><summary>几何、标定与代码</summary>
+<div class="pair"><label>断口长度 / m<input id="gap_length" type="number" min="0.4" max="2.4" step="0.1"></label><label>门宽 / m<input id="gate_width" type="number" min="0.35" max="1.2" step="0.05"></label></div>
+<div class="pair"><label>线圈前探 / m<input id="coil_forward" type="number" min="0.1" max="0.6" step="0.01"></label><label>线圈高 / m<input id="coil_height" type="number" min="0.02" max="0.4" step="0.01"></label></div>
+<div class="pair"><label>舵机单位 / °<input id="servo_units_per_degree" type="number" min="0.5" max="20" step="0.5"></label><label>门区限时 / ms<input id="gate_timeout_ms" type="number" min="100" max="10000" step="100"></label></div>
+<div class="pair"><label>激励频率 / kHz<input id="frequency_khz" type="number" min="10" max="500" step="10"></label><label>线圈轴角 / °<input id="coil_yaw_deg" type="number" min="10" max="80" step="5"></label></div>
+<div class="pair"><label>接收线圈匝数<input id="coil_turns" type="number" min="1" max="1000" step="10"></label><label>面积 / mm²<input id="coil_area_mm2" type="number" min="1" max="200" step="1"></label></div>
+<div class="pair"><label>编码器 counts/m<input id="counts_per_m" type="number" min="1000" max="100000" step="1000"></label><label>相机延迟 / ms<input id="camera_delay_ms" type="number" min="0" max="500" step="10"></label></div>
+<div class="pair"><label>磁方向符号<select id="mag_sign"><option value="1">+1</option><option value="-1">-1</option></select></label><label>左/右增益差<input id="gain_mismatch" type="number" min="-0.8" max="0.8" step="0.05"></label></div>
+<label>手动转向 / °<input id="manual_steer_deg" type="range" min="-35" max="35" step="1"></label><label>手动车速 / m·s⁻¹<input id="manual_speed" type="number" min="-2" max="3" step="0.1"></label>
+<button id="rebuild" class="secondary full">重新编译并加载 C 核心</button><label class="upload">导入线圈标定 CSV<input type="file" id="calibrationFile" accept=".csv"></label><p id="calibrationLabel" class="micro">当前为解析场模型。CSV列：bx_uT, by_uT, bz_uT, adc_l, adc_r</p><button id="clearCalibration" class="text-button">恢复解析包络模型</button>
+</details>
+<button id="apply" class="secondary full">应用参数并复位</button><p class="micro">滑块改动在应用后生效。默认门限 40 是仿真标定值，源码默认门限为 160。这里不修改上车配置。</p>
+</aside>
+<section class="workspace">
+<label class="inline">地图配色<select id="mapStyle"><option value="bluewhite">指定蓝色 #374373 / 白道</option><option value="bw">黑白线图</option></select></label><label class="field-toggle"><input id="showField" type="checkbox"> 显示磁场方向</label><div class="scene-head"><div><span class="eyebrow">控制回放</span><h1 id="courseTitle">闭环完整赛道</h1></div><div class="view-buttons"><button data-view="orbit" class="active">自由视角</button><button data-view="top">全场俯视</button><button data-view="follow">跟车</button></div></div>
+<div id="viewport"><canvas id="scene"></canvas><div class="scene-legend"><span><i class="white-road"></i><span id="mapLegend">蓝底白道</span></span><span><i class="cyan"></i>电磁场方向</span><span><i class="amber"></i>行驶轨迹</span></div><div class="scene-badge"><strong id="runStatus">准备测试</strong><span id="gateStatus">循迹</span></div><div id="webglError" hidden></div><div class="scene-bottom">当前车模外形来自 V11 最新删减装配 · 门和赛道尺寸为可调假设</div></div>
+<div class="toolbar"><div class="run-actions"><button id="start" class="primary">开始仿真</button><button id="demo" class="secondary">快速整圈演示</button><button id="step" class="secondary">单步</button><button id="reset" class="secondary">复位</button><button id="kill" class="danger">急停</button></div><div><label class="inline">播放<select id="timeScale"><option value="0.25">0.25×</option><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select></label><a class="map-download" href="assets/bluewhite_11gates.svg" download>下载11门净图</a><a class="download" href="/api/log.csv" download>导出 CSV</a></div></div>
+<div class="course-strip"><span>当前元素 <b id="courseElement">直道</b></span><span>圈进度 <b id="lapProgress">0%</b></span><span>过门 <b id="gateCounter">0 / 0</b></span><span id="controlCoverage">C核心运行，元素类别由场景标注提供</span></div>
+<div class="metrics"><div><span>时间</span><b id="time">0.00 <small>s</small></b></div><div><span>实际车速</span><b id="speed">0.00 <small>m/s</small></b></div><div><span>转向角</span><b id="steer">0.0 <small>°</small></b></div><div><span>横向位置</span><b id="offset">0.000 <small>m</small></b></div><div><span>故障锁存</span><b id="fault">无</b></div></div>
+<div class="plots"><div><h2>双线圈 ADC 包络 <span id="adcValues">L 0 / R 0</span></h2><canvas id="signals" width="650" height="155"></canvas></div><div><h2>转向与车速 <span>° / m·s⁻¹</span></h2><canvas id="motion" width="420" height="155"></canvas></div></div>
+</section>
+<aside class="telemetry"><div class="eyebrow">输入与状态</div><h2>合成相机掩膜 <span>80 × 60</span></h2><canvas id="cameraMask" width="320" height="240"></canvas><p class="micro">地面投影生成白道掩膜。尚未运行 Image.c 完整视觉算法。</p>
+<div class="kv"><span>当前门位</span><b id="activeGate">—</b></div><div class="kv"><span>最高车速</span><b id="maxSpeed">—</b></div><div class="kv"><span>白道有效</span><b id="lineValid">—</b></div><div class="kv"><span>断口提示</span><b id="gapHint">—</b></div><div class="kv"><span>磁信号有效</span><b id="magValid">—</b></div><div class="kv"><span>磁差比误差</span><b id="magError">—</b></div><div class="kv"><span>左右轮目标</span><b id="targets">—</b></div><div class="kv"><span>负压指令</span><b id="fanCmd">—</b></div><div class="kv"><span>预测场强</span><b id="fieldStrength">—</b></div>
+<h2 class="events-title">状态切换</h2><ol id="events"><li>应用参数后可开始测试</li></ol>
+<details class="model-note"><summary>仿真覆盖范围</summary><p>用户代码接收传感器数据并输出控制量。内置参考C模式运行CarCore.c / CarProfiles.c的PC版本。运动采用平面自行车模型，包含电机与舵机一阶延迟。磁场采用矩形线圈分段 Biot–Savart 积分。</p><p>多门位置和激励调度由场景设置。整圈演示用理想路线。场强和高速能力仍需实测。</p><p>圆环和十字的元素类别由场景标注提供，尚未运行完整视觉元素识别。整圈路线演示使用理想路线，不是代码测试结果。</p><p>模型未包含真实轮胎载荷、气动负压、线圈电路频率响应、MCU外设或整段坡道动力学。显示的“通过”仅针对当前仿真假设。</p><p id="sourcePath"></p></details>
+</aside></main><div id="toast" role="status"></div><script type="module" src="app.js"></script></body></html>

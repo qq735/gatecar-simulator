@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+.venv/
+build/
+dist/
+*.dll
+*.so
+*.dylib
+.DS_Store
+.env

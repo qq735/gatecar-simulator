@@ -1,0 +1,259 @@
+{
+  "source": "User-edited V11 assembly snapshot, 61 instances, exported 2026-11-09",
+  "component_instances": 61,
+  "triangles": 116070,
+  "glb_bytes": 4270976,
+  "units": "metres",
+  "mapping": "CAD (X forward,Y left,Z up) -> glTF(X,Y=Z,Z=-Y); rear axle reference origin",
+  "moving_visual_nodes": [
+    "front_wheel_left",
+    "front_wheel_right"
+  ],
+  "geometry_role": "Visual mesh only, dynamics use explicit planar vehicle parameters",
+  "parts": [
+    {
+      "part": "V11_DCXG200_adjustable_PCB_carrier.step",
+      "sha256": "21886cf66ffdb1c6e5aca695d423332d663102648daca8db460e36f6ae4df175"
+    },
+    {
+      "part": "V11_front_roller_forks.step",
+      "sha256": "4702c196b2b9a168ba3b2a92a03a142070968c4cf4a53fb6baf664798c407c7d"
+    },
+    {
+      "part": "V11_3S_cells_65x36x30_reference.step",
+      "sha256": "a968c21f79e6e1d24257ad5faff9d8e603fed0ca4a9bd9f2b378bc249648174a"
+    },
+    {
+      "part": "V11_XT60_battery_female_reference.step",
+      "sha256": "09e1996186c07674226852b32657e28f0d03d5f25abeda7d1f10467a39ad3ff7"
+    },
+    {
+      "part": "V11_3S_removable_battery_cartridge.step",
+      "sha256": "4f99cb64e7c57719413feb5b448897e942e10eedf21319aea56a54e2a61343a6"
+    },
+    {
+      "part": "V11_camera_tube_clamp_tilt_fork.step",
+      "sha256": "13a45b79455159619af72c62bb659809ac0cc9494eff70c7af8080f734664565"
+    },
+    {
+      "part": "V11_DCXG200_PCB_size_reference.step",
+      "sha256": "ea568a6f2ec9f65d80eff30d8700380d32ab23387b7c6e51b36e36daf08b93d7"
+    },
+    {
+      "part": "V11_battery_connector_retaining_plate.step",
+      "sha256": "3bddfbe076946f0659e6297ede195e7cb853d44e606891a574295ba9c912364f"
+    },
+    {
+      "part": "V11_carbon_tube_OD8_ID6_L200.step",
+      "sha256": "a481417b588057813ac19d11ff735e1bc62e6ef5150621b88f18ebb70bb575d1"
+    },
+    {
+      "part": "V11_camera_PCB_spacers_flat.step",
+      "sha256": "c967a26270162c5551302e1c64987a5c6db2eabd6b6d48d233cda45e1fe203ad"
+    },
+    {
+      "part": "V11_flange_D27_bore8_PCD21.step",
+      "sha256": "85e0bce87f7fe19510bbfa7871c6d99c7fb6179c7ecc2137d50883f58fd9805f"
+    },
+    {
+      "part": "V11_Xfly_X4_40mm_reference.step",
+      "sha256": "8c0a6502c68331a2804ca255f6f0f34d6e985a82f581e6bf47d4692f63d2ddf3"
+    },
+    {
+      "part": "V11_plenum_sealed_bosses_R4p25.step",
+      "sha256": "5a7defcb69d4606af3bec5f31363419333be1ba2d67a35ccf405a3d1ad9071eb"
+    },
+    {
+      "part": "V11_front_rollers_D26_W8.step",
+      "sha256": "48c1029239af6e779fe33a8e2e2ad235c557f87bf8933466216578f544676dda"
+    },
+    {
+      "part": "V11_flexible_skirts_08mm.step",
+      "sha256": "5bed2209c20d1e4035bfcd6e952dbfc4fff2be101f33b6fa2f79f7290cdb90e4"
+    },
+    {
+      "part": "V11_roller_M3_axles_reference.step",
+      "sha256": "58f5f8ea9681a8ebe7e000df3085f4a6ee44b4efbb515a944463c2bef49991b3"
+    },
+    {
+      "part": "V11_roller_bearings_3x6x2p5_reference.step",
+      "sha256": "47e577bbe5fe82bba98c5f3024d5c8e8e939f9cd27de0202f3b03beb8d3d9e49"
+    },
+    {
+      "part": "V11_Xfly_X4_40mm_reference.step",
+      "sha256": "8c0a6502c68331a2804ca255f6f0f34d6e985a82f581e6bf47d4692f63d2ddf3"
+    },
+    {
+      "part": "V11_magnetic_arm_height_angle_bases.step",
+      "sha256": "1ab30fd198353787ad065020128e0a77635be0410d39525947094786e61ab331"
+    },
+    {
+      "part": "V11_GFRP_tubes_OD6_ID4_L180_pitch15.step",
+      "sha256": "3d4626257b81a739b3f302edbbe4ae908b90fb3a750bdceb57c39f7d1b6ec42d"
+    },
+    {
+      "part": "V11_horizontal_orthogonal_coils_reference.step",
+      "sha256": "86effedfc70901a9d67ccae82d87e7e4d58b05f9efa15348fdb324e45c7e72de"
+    },
+    {
+      "part": "V11_magnetic_arm_pitch_clamps_15deg.step",
+      "sha256": "06a8a66be85f64b012f64b072bf46405e33ab4815e2e30cc3f044e6e9aa8a2a2"
+    },
+    {
+      "part": "V11_fan_adapter_clamps.step",
+      "sha256": "09698ebde535431e1c84bc670c30695099d65ef9bd9ddd9f069dadd5312252a7"
+    },
+    {
+      "part": "V11_PCB_direct_mount_posts.step",
+      "sha256": "101c0a29fbfe4cceb1ae5e92480a9f92786fc0b7d2512944f4deec091a4c5aaf"
+    },
+    {
+      "part": "V11_sliding_pitch_frame_with_head_hinge.step",
+      "sha256": "7f4149acb14f3aff4408d9810bb4d01bec20c43633eb9f10d4e74d06ae63a655"
+    },
+    {
+      "part": "V11_XT60_car_reference_rear_tail_clearance.step",
+      "sha256": "b8e571ecf5572c328eb4a3bea45ccfa6d59d67dde1e898814d905f2048decbb9"
+    },
+    {
+      "part": "V11_level_receiver_head_with_pitch_hinge.step",
+      "sha256": "5e3b3e3cdca7e07cc58de97a0b877a4677413971c81347eb6504748521de8fdb"
+    },
+    {
+      "part": "V11_receiver_spacers.step",
+      "sha256": "29f2bdbc8952a47ca440bc652f2c24c394eb016bc37ef443f66894f678ab9607"
+    },
+    {
+      "part": "V11_XT60_cassette_wire_reliefs.step",
+      "sha256": "201c3b57919bc9e3e2c2882b4b8779a30a9bae3d6c493e2a36c6ac41364a9b09"
+    },
+    {
+      "part": "V11_battery_dock_rear_wire_tunnel.step",
+      "sha256": "49788455f9976d7eb73476072d666605fb891e5d07e0e746b099812a3e856404"
+    },
+    {
+      "part": "V11_magnetic_receiver_PCB_reference.step",
+      "sha256": "44e40e9997d02d336660e075167d08f0814f7d396d30d9095c00173a965a2338"
+    },
+    {
+      "part": "V11_soft_wire_exit_liners_reference.step",
+      "sha256": "3e32e6af66e9ef12be11b65fa981b21c96920ddef3f983be11a49cbec07ee6db"
+    },
+    {
+      "part": "V11_ESC_left_beside_fan_reference.step",
+      "sha256": "63c83785ef1d01bad19f7f55fe3e59b32b2881cd6c45aa6b2ef6dd41c2ae4d14"
+    },
+    {
+      "part": "V11_wire_exit_strain_relief_bridge.step",
+      "sha256": "3a1398f7c22551ae64fcd4c207cce04e87b42aecacf0f798250d6324533d7acd"
+    },
+    {
+      "part": "V11_ESC_right_independent_tray.step",
+      "sha256": "dfa9d3d453e6ef9a7c98958a17afa5f55c48e8c182d352fa930aceb922b5afb1"
+    },
+    {
+      "part": "V11_ESC_left_independent_tray.step",
+      "sha256": "74fe129881ccfb3306377a949bbb155297652cad2f415a52448076bb882ff196"
+    },
+    {
+      "part": "V11_ESC_right_beside_fan_reference.step",
+      "sha256": "40fb5a0d5883fff5af8f182e6c19a0a006a8edb29d6b73f5f131b10a2e30aece"
+    },
+    {
+      "part": "V11_balance_cable_passage_reference.step",
+      "sha256": "9777fe135a60d45b34ee8af8f15ed0aff7c6c80f70bcd8d35c396c31a22ffb62"
+    },
+    {
+      "part": "V11_battery_lid_balance_lead_passage.step",
+      "sha256": "279f19777dadcf8d017f07deb7c373ffdbb67e9b1e513a6f95876d0fe1d1414f"
+    },
+    {
+      "part": "V11_phase_left_1_route_reference.step",
+      "sha256": "6cf628942f39e2779d7587515c58b6bf4425076d80fb845e39aa314fa329cfb4"
+    },
+    {
+      "part": "V11_phase_left_3_route_reference.step",
+      "sha256": "6f0c5ff9a9c910fa7f528ed2e893562c9fa9e06b36f8bf67bef4c0a4babf0d33"
+    },
+    {
+      "part": "V11_phase_left_2_route_reference.step",
+      "sha256": "576a0a23a23f32370c4234c84fbd80f2a90f0e39df271400fff733ad8edfc22f"
+    },
+    {
+      "part": "V11_phase_right_1_route_reference.step",
+      "sha256": "97330f7eb5b2cd44382b6fade3137caa7d558b87e592ce826ee35fdf28bdf57a"
+    },
+    {
+      "part": "V11_control_left_route_reference.step",
+      "sha256": "b4498937fdd6ef6e4fddef51a2852cfeb57b37772399b792fdbcd6b569e55cb0"
+    },
+    {
+      "part": "V11_control_right_route_reference.step",
+      "sha256": "4dc5270c90de7b378d2613b05cd18a12794a31ff4a738b18a2bcde149fe9bed0"
+    },
+    {
+      "part": "V11_phase_right_3_route_reference.step",
+      "sha256": "8cb14ba39f17c1acbe209728962b0ea14d343dc4b861468514e95d15aaea75fa"
+    },
+    {
+      "part": "V11_phase_right_2_route_reference.step",
+      "sha256": "cfcf4aa04700c413829b078d17dd888c8ada9e5d24dc23a958c073c539aad810"
+    },
+    {
+      "part": "V11_underboard_XT60_right_ESC_right_angle_reference.step",
+      "sha256": "e822c7a049f45cdf7d2d2d0cebad8fe36c0ee55efe683e280095454dfcd04710"
+    },
+    {
+      "part": "V11_horizontal_harness_XT60_right_ESC_reference.step",
+      "sha256": "b750120e5f86e6b2f91c9b6b302322cd4fb5f6434806861c740ccc5f69ffb264"
+    },
+    {
+      "part": "V11_horizontal_harness_XT60_battery_reference.step",
+      "sha256": "3a0df03bd5999c3f69a7b20f83414338fd0a8e95fbea98ff5610708b2ca41d88"
+    },
+    {
+      "part": "V11_PCB_edge_connectors_no_top_wire_hole.step",
+      "sha256": "7c943b7b47895321d6b69f1963eaadee1187be2ec3a7264d7972788a19925f0b"
+    },
+    {
+      "part": "V11_underboard_XT60_battery_right_angle_reference.step",
+      "sha256": "519a203bc48efb656404fbff2dd4718320baada4ee8b38a96164ebfd070c4df2"
+    },
+    {
+      "part": "V11_underboard_XT60_left_ESC_right_angle_reference.step",
+      "sha256": "6a784d78f521b6cb3a0ce8cf51b842a83b35c055b2d6293dd9291c3cb0586e38"
+    },
+    {
+      "part": "V11_horizontal_harness_XT60_left_ESC_reference.step",
+      "sha256": "88cc4f5563fb2c71724368c63e1518758eeaafbe274a64809ca74271610ed51b"
+    },
+    {
+      "part": "V11_esc_left_negative_low_route_reference.step",
+      "sha256": "c0dae342b57e6ffb1f188cede75137648a6d68637d48d10d320afcf2e359ce37"
+    },
+    {
+      "part": "V11_esc_left_positive_low_route_reference.step",
+      "sha256": "258f2c69a35446c92b1a873d4bd972e57f0a2dacd3317fd687397b0b608de469"
+    },
+    {
+      "part": "V11_main_positive_low_route_reference.step",
+      "sha256": "926f964219f8e9826e25de2993133dd8aef9427c94a0ad96eb7294dcad7a3999"
+    },
+    {
+      "part": "V11_main_negative_low_route_reference.step",
+      "sha256": "e04b6d5bce021460a7513e4c4f07b65095d27e5a9b24f83223a7dbe997ab0591"
+    },
+    {
+      "part": "V11_esc_right_negative_low_route_reference.step",
+      "sha256": "58cc056cd795b0dcb7a2ea3ec2a1559a2e0d41ca3ddef1a5e9963fb5a8e25b54"
+    },
+    {
+      "part": "V11_esc_right_positive_low_route_reference.step",
+      "sha256": "a762d13d1eb3b5ee5ffdad36fa54760aa10cd6e384a35a73b93e8283516f394d"
+    },
+    {
+      "part": "V11_chassis_ESC_tray_pilots.step",
+      "sha256": "3d84f5ab4553ea09ba720dd17c52eec08a7ffe2714d26fc12431ba719742fcf3"
+    }
+  ]
+}

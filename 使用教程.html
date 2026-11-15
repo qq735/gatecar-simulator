@@ -1,0 +1,688 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>智能车仿真完整中文使用教程</title><style>
+:root{font-family:"Microsoft YaHei",system-ui,sans-serif;color:#243b47;background:#edf2f4;line-height:1.85}*{box-sizing:border-box}body{margin:0}nav{position:fixed;top:0;left:0;bottom:0;width:270px;overflow:auto;padding:24px;background:#10454e;color:white}nav strong{display:block;font-size:20px;margin-bottom:16px}nav a{display:block;color:#d5edef;text-decoration:none;padding:7px 0;font-size:13px;line-height:1.6}nav a:hover{color:white}article{max-width:1080px;margin:0 auto 0 290px;padding:42px;background:white}h1{font-size:30px;color:#10454e}h2{margin-top:48px;padding-top:18px;border-top:1px solid #d5e2e6;color:#10454e;scroll-margin-top:20px}h3{color:#2c6670}p,li{font-size:15px}pre{overflow:auto;background:#142f38;color:#ecf7f7;padding:18px;border-radius:6px;line-height:1.6}code{font-family:Consolas,monospace;font-size:13px}p code,li code,td code{background:#edf3f5;padding:2px 5px;border-radius:3px}table{width:100%;border-collapse:collapse;margin:22px 0;font-size:14px}th{background:#e7f1f2;text-align:left}td,th{border:1px solid #cbdde1;padding:10px}img{max-width:100%;height:auto;border:1px solid #d7e4e8}a{color:#116b7c}.tip{font-size:13px;color:#657d87}footer{margin-top:45px;color:#6a818a;font-size:12px}@media(max-width:900px){nav{position:static;width:auto;max-height:260px}article{margin:0;padding:24px}}@media print{nav{display:none}article{margin:0;padding:0;max-width:none}pre{white-space:pre-wrap}h2{break-before:auto}table,pre{break-inside:avoid}}
+</style></head><body><nav><strong>GateCar Simulator</strong><span>完整中文教程</span><a href="#section-1">1. 先了解这个软件做什么</a><a href="#section-2">2. 下载哪个文件</a><a href="#section-3">3. 需要安装什么</a><a href="#section-4">4. 第一次启动</a><a href="#section-5">5. 界面怎么读</a><a href="#section-6">6. 四类控制器不要混淆</a><a href="#section-7">7. 第一次先跑通演示</a><a href="#section-8">8. 导入Python代码的完整步骤</a><a href="#section-9">9. 导入C或C++代码</a><a href="#section-10">10. 现有Keil/STM32/STC工程如何适配</a><a href="#section-11">11. 输入和输出单位</a><a href="#section-12">12. 怎样测试电磁门</a><a href="#section-13">13. 参数怎么调</a><a href="#section-14">14. 相机掩膜怎么看</a><a href="#section-15">15. CSV日志怎么分析</a><a href="#section-16">16. 报错与恢复</a><a href="#section-17">17. 推荐调试流程</a><a href="#section-18">18. 自测与二次开发</a><a href="#section-19">19. 文件维护与更新</a><a href="#section-20">20. 仿真结果的边界</a></nav><article><p class="tip">离线可读，无需启动仿真。按Ctrl+F查找关键词，点击左侧目录跳转。</p><h1>GateCar Simulator 完整中文使用教程</h1>
+<p>版本：1.0.0　更新：2026年11月15日</p>
+<p>适用对象：第一次使用仿真的同学，以及准备接入Python、C/C++或现有智能车控制算法的开发者。</p>
+<h2 id="section-1">1. 先了解这个软件做什么</h2>
+<p>这是在电脑上运行的智能车控制仿真台。它把赛道、车模、相机掩膜、编码器和双线圈磁信号交给控制程序，再根据程序输出推动车辆。</p>
+<p>你可以：</p>
+<ul>
+<li>查看房间蓝白地图和11处电磁门，切换到圆环、Ω弯、十字附近的单门。</li>
+<li>导入自己的控制代码，看车辆如何转向、加减速、过门和停车。</li>
+<li>观察ADC信号、相机掩膜、转向、速度与状态变化。</li>
+<li>制造弱磁、噪声、延迟、相机中断和急停工况。</li>
+<li>导出CSV，把现象对应到每一个5 ms控制周期。</li>
+</ul>
+<p>本软件不连接实车、不烧录单片机。理想路线演示能跑完，不代表你导入的代码也能跑完。实际比赛规则、门线圈频率与高速接收能力仍需用正式资料和实物确认。</p>
+<h2 id="section-2">2. 下载哪个文件</h2>
+<p>仓库地址：<a href="https://github.com/qq735/gatecar-simulator">https://github.com/qq735/gatecar-simulator</a></p>
+<p>建议进入Releases，下载<code>gatecar-simulator.zip</code>。没有Release时，可以使用仓库页面的“Code → Download ZIP”。两种方式都要先解压，不能在压缩包窗口内直接双击启动器。</p>
+<p>建议解压到普通目录，例如：</p>
+<pre><code class="language-text">D:\SmartCar\gatecar-simulator
+</code></pre>
+<p>文件夹中应该能看到：</p>
+<pre><code class="language-text">gatecar-simulator/
+  Start.cmd                 Windows启动入口
+  start.py                  自动检查依赖并启动服务
+  start.sh                  Linux/macOS启动入口
+  requirements.txt          运行依赖
+  README.md                 简要说明
+  simulation.py             车辆、传感器与仿真循环
+  server.py                 本地网页服务
+  sdk/gatecar_api.h          C/C++接口定义
+  examples/controller.py    Python接入示例
+  examples/controller.c     C接入示例
+  control_src/              内置参考C控制核心
+  web/                     网页、Three.js与车模
+  docs/                    教程、接入说明和预览
+  tests/                   自动测试
+  tools/                   打包工具
+</code></pre>
+<p><code>build/</code>和<code>.venv/</code>是运行时产生的目录，首次解压没有它们是正常的。你不需要原作者电脑上的CAD文件、Keil工程或旧仿真文件夹。</p>
+<h2 id="section-3">3. 需要安装什么</h2>
+<table>
+<thead>
+<tr>
+  <th>你想做的事</th>
+  <th>必需软件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>看地图、运行理想路线演示</td>
+  <td>64位Python 3.10以上、Edge/Chrome等支持WebGL的浏览器</td>
+</tr>
+<tr>
+  <td>导入Python控制器</td>
+  <td>同上</td>
+</tr>
+<tr>
+  <td>导入C/C++控制器</td>
+  <td>同上，另装GCC/Clang；C++还需要g++/clang++</td>
+</tr>
+<tr>
+  <td>运行内置参考C核心</td>
+  <td>GCC或Clang</td>
+</tr>
+<tr>
+  <td>使用Git克隆仓库</td>
+  <td>Git，可选，直接下载ZIP不需要</td>
+</tr>
+<tr>
+  <td>修改Keil工程中的算法</td>
+  <td>提取为PC可编译算法，仿真本身不需要Keil或SolidWorks</td>
+</tr>
+</tbody>
+</table>
+<p>推荐Python 3.12的64位版本。Windows本机已经在Python 3.14下验证。需要安装numpy、scipy、shapely，启动器可在缺少依赖时自动安装。</p>
+<h3>3.1 Windows安装Python</h3>
+<p>从Python官方入口下载安装：<a href="https://www.python.org/downloads/">https://www.python.org/downloads/</a></p>
+<p>安装时勾选“Add Python to PATH”。安装后重新打开终端，运行：</p>
+<pre><code class="language-powershell">python --version
+</code></pre>
+<p>如果系统使用Python Launcher，也可以运行：</p>
+<pre><code class="language-powershell">py -3 --version
+</code></pre>
+<p>显示3.10或更新版本即可。启动器优先使用<code>py -3</code>，没有Launcher时使用<code>python</code>。</p>
+<h3>3.2 Windows安装C/C++编译器</h3>
+<p>只使用Python代码的同学可以跳过。</p>
+<p>安装MSYS2：<a href="https://www.msys2.org/">https://www.msys2.org/</a></p>
+<p>在MSYS2 UCRT64终端中安装GCC工具链：</p>
+<pre><code class="language-sh">pacman -S mingw-w64-ucrt-x86_64-gcc
+</code></pre>
+<p>把MSYS2安装目录下的<code>ucrt64\bin</code>加入PATH。例如默认安装位置对应：</p>
+<pre><code class="language-text">C:\msys64\ucrt64\bin
+</code></pre>
+<p>重新打开终端验证：</p>
+<pre><code class="language-powershell">gcc --version
+g++ --version
+</code></pre>
+<p>若不想修改PATH，也可在准备启动程序的同一个PowerShell窗口中临时设置：</p>
+<pre><code class="language-powershell">$env:CC = 'C:\msys64\ucrt64\bin\gcc.exe'
+python start.py
+</code></pre>
+<p>C++项目还需要编译器目录中存在<code>g++.exe</code>。仿真只使用GCC/Clang编译本机DLL/SO，不会使用Keil的C51/C251编译器。</p>
+<h2 id="section-4">4. 第一次启动</h2>
+<h3>4.1 Windows双击启动</h3>
+<ol>
+<li>打开解压后的目录。</li>
+<li>双击<code>Start.cmd</code>。</li>
+<li>如果缺少依赖，等待启动器创建<code>.venv</code>并下载依赖。第一次需要联网，完成后前端地图和车模均从本机载入。</li>
+<li>终端出现<code>SIMULATOR_READY http://127.0.0.1:8870</code>后，浏览器自动打开。</li>
+<li>页面显示蓝底白道和车模，表示启动成功。</li>
+</ol>
+<p>运行过程中保留终端窗口。关闭它或按Ctrl+C后，本地服务停止，网页也就无法继续推进仿真。</p>
+<p>端口8870占用时，程序自动尝试后续9个端口。以终端打印的实际地址为准，不必一直刷新旧地址。</p>
+<h3>4.2 手动安装依赖和启动</h3>
+<p>在项目目录的终端运行：</p>
+<pre><code class="language-powershell">python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe start.py
+</code></pre>
+<p>上述写法不要求激活环境，也不需要修改PowerShell执行策略。</p>
+<p>指定端口或者不自动打开浏览器：</p>
+<pre><code class="language-powershell">python start.py --port 8890 --no-browser
+</code></pre>
+<h3>4.3 Linux或macOS</h3>
+<pre><code class="language-sh">python3 -m venv .venv
+. .venv/bin/activate
+python -m pip install -r requirements.txt
+python start.py
+</code></pre>
+<p>需要C/C++时，Linux安装gcc/g++，macOS安装Clang命令行工具。当前发布前的实机检查在Windows完成，其他平台请同时参考GitHub Actions测试状态。</p>
+<h3>4.4 这不是GitHub Pages</h3>
+<p>GitHub只存放源码和下载包。代码编译与运行发生在下载者自己的电脑上，需要本地Python服务。不能直接把<code>web/index.html</code>拖进浏览器当作完整程序运行，也不能只下载<code>web</code>文件夹。</p>
+<h2 id="section-5">5. 界面怎么读</h2>
+<p><img src="docs/preview.png" alt="仿真主界面" /></p>
+<p>左侧是赛道、控制器、门位、起跑方式、代码导入和参数。中间是三维场景、运行按钮、车辆状态和曲线。右侧是相机掩膜、当前门位和事件记录。</p>
+<table>
+<thead>
+<tr>
+  <th>按钮或项目</th>
+  <th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>开始仿真 / 暂停 / 继续</td>
+  <td>连续运行或暂停</td>
+</tr>
+<tr>
+  <td>快速整圈演示</td>
+  <td>切换到已知理想路线控制，便于看地图，不测试用户代码</td>
+</tr>
+<tr>
+  <td>单步</td>
+  <td>每次推进5 ms</td>
+</tr>
+<tr>
+  <td>复位 / 应用参数并复位</td>
+  <td>时间归零、车辆回到起跑处、清空当前轨迹，并调用控制器reset</td>
+</tr>
+<tr>
+  <td>急停</td>
+  <td>当前测试输出动力归零，进入故障状态，需要复位</td>
+</tr>
+<tr>
+  <td>俯视 / 跟车 / 自由视角</td>
+  <td>切换观察方式</td>
+</tr>
+<tr>
+  <td>显示磁场方向</td>
+  <td>显示解析模型的磁场方向箭头</td>
+</tr>
+<tr>
+  <td>地图配色</td>
+  <td>在指定蓝底白道与黑白线图间切换</td>
+</tr>
+<tr>
+  <td>导出CSV</td>
+  <td>下载当前浏览器标签页的运行日志</td>
+</tr>
+</tbody>
+</table>
+<p>当前界面在较窄窗口会隐藏右侧栏，建议电脑全屏使用。</p>
+<h2 id="section-6">6. 四类控制器不要混淆</h2>
+<h3>6.1 整圈路线演示</h3>
+<p>使用赛道理想路线控制转向，适合查看全部元素、门位和车模动画。默认采用此模式，所以没有C编译器也能开始体验。</p>
+<h3>6.2 用户导入代码</h3>
+<p>车辆由你导入的Python或C/C++代码控制。接口不给理想路线、真实X/Y或场景元素标签。你可以自行使用相机掩膜识别赛道元素，也可先使用简化视觉误差调试控制器。</p>
+<h3>6.3 内置参考C核心</h3>
+<p>编译包内<code>control_src/CarCore.c</code>和<code>CarProfiles.c</code>，主要用于观察既有状态机、PID和故障保护。此模式不自动读取电脑上的其他智能车工程。它目前没有接入完整<code>Image.c</code>等视觉补线链，在圆环或Ω弯可能失败，不能把理想演示结果当作该核心的测试结果。</p>
+<h3>6.4 传感器参考与手动控制</h3>
+<p>传感器参考控制器用于简单对照。手动控制使用界面的手动车速、转向角，适合检查方向和观察局部姿态。</p>
+<h2 id="section-7">7. 第一次先跑通演示</h2>
+<ol>
+<li>赛道选“房间地图”。</li>
+<li>控制器保持“整圈路线演示”。</li>
+<li>门位选“全部可用门位”。</li>
+<li>起跑方式选“从起点跑整圈”。</li>
+<li>车速倍率1.6，播放1倍。</li>
+<li>点击开始仿真，或者快速整圈演示。</li>
+<li>观察圈进度、过门计数和事件记录，结束后显示完成闭环。</li>
+</ol>
+<p>默认条件下，理想路线演示约20.335仿真秒完成一圈、峰值约2.16 m/s，经过11门。终端运算、浏览器帧率和网络请求可能使墙上时间更长，这不改变固定5 ms仿真步长。</p>
+<h2 id="section-8">8. 导入Python代码的完整步骤</h2>
+<h3>8.1 获取并修改示例</h3>
+<p>左侧点击“Python示例”，或复制项目里的<code>examples/controller.py</code>到自己的工作目录。不要直接编辑网页JS代替控制代码。</p>
+<p>最小可运行接口：</p>
+<pre><code class="language-python">def reset(config):
+    return {'last_error': 0.0}
+
+def step(sensors, state):
+    error = sensors['visual_error_deg']
+    state['last_error'] = error
+    enabled = bool(sensors['line_valid']) and not sensors['kill']
+    return {
+        'speed_m_s': 0.7,
+        'steer_deg': max(-30, min(30, 1.7 * error)),
+        'fan': 0.35,
+        'enabled': enabled,
+        'fault': 0 if enabled else 3,
+    }
+</code></pre>
+<p><code>reset</code>在每次复位时执行，返回的字典会持续传给后续<code>step</code>。<code>step</code>每5 ms执行一次，不要自己写一个永远不返回的主循环，也不要在里面长时间sleep。</p>
+<h3>8.2 从文件导入</h3>
+<ol>
+<li>先选“独立电磁门与断口”，或房间地图中选择“无门”，便于先测循迹。</li>
+<li>点击“选择Python / C / C++ / ZIP”，选择修改后的<code>.py</code>。</li>
+<li>导入成功后，界面显示文件名、语言和SHA256，并自动选择“用户导入代码”。</li>
+<li>点击“开始代码测试”。</li>
+<li>观察转向是否正确、车速是否合理、白道丢失后是否停车。</li>
+</ol>
+<p>修改文件后需要重新导入。仿真运行的是导入时的代码快照，不会自动监听原文件变化。</p>
+<h3>8.3 使用自己的视觉算法</h3>
+<p><code>sensors['camera_gray']</code>为长度4800的一维数组，宽80、高60。访问第r行、第c列：</p>
+<pre><code class="language-python">value = sensors['camera_gray'][r * 80 + c]
+</code></pre>
+<p>白道约240，背景约24。<code>frame_new</code>为1时才有新图像，避免同一旧帧被重复当成多次识别证据。模拟相机通常20 ms产生一帧，控制仍然每5 ms运行。</p>
+<p><code>visual_error_deg</code>、<code>line_valid</code>和<code>gap_hint</code>是内置简化算法给出的结果；若你要验证自己的元素识别，应从图像自行计算这些信息，不能把内置提示当成算法测试结果。</p>
+<h3>8.4 多文件Python项目</h3>
+<p>压缩包示例：</p>
+<pre><code class="language-text">my-controller.zip
+  controller.py
+  vision.py
+  pid.py
+</code></pre>
+<p>必须有唯一的<code>controller.py</code>入口。入口同目录可以<code>import vision</code>、<code>import pid</code>。需要额外第三方库时，先安装到运行仿真的同一个Python环境。</p>
+<h2 id="section-9">9. 导入C或C++代码</h2>
+<h3>9.1 单文件C示例</h3>
+<p>左侧下载“C示例包”，得到<code>controller.c</code>和<code>gatecar_api.h</code>。保留接口函数：</p>
+<pre><code class="language-c">#include &quot;gatecar_api.h&quot;
+
+void gatecar_reset(void) {
+    /* 初始化PID、滤波器和状态机 */
+}
+
+void gatecar_step(const GateCarInput *in, GateCarOutput *out) {
+    out-&gt;enabled = in-&gt;line_valid &amp;&amp; !in-&gt;kill;
+    out-&gt;speed_m_s = 0.7;
+    out-&gt;steer_deg = 1.7 * in-&gt;visual_error_deg;
+    out-&gt;fan = 0.35;
+}
+</code></pre>
+<p>每次调用前宿主把输出结构体清零，必须显式设置<code>enabled</code>才能启动车辆。不要修改结构体字段顺序或类型。宿主会检查API版本和结构体大小。</p>
+<p>可以直接选单个<code>.c</code>，仿真会自动提供头文件并编译。编译失败会显示编译器错误，原来已导入的控制器继续保留。</p>
+<h3>9.2 多文件C/C++项目</h3>
+<pre><code class="language-text">my-controller.zip
+  controller.c
+  control/pid.c
+  control/pid.h
+  vision/vision.c
+  vision/vision.h
+</code></pre>
+<p>入口应唯一，命名为<code>controller.c</code>或<code>controller.cpp</code>。源码支持子目录，程序把源码目录加入头文件搜索路径。C++使用相同SDK，头文件已经处理<code>extern &quot;C&quot;</code>。</p>
+<p>不要把编译得到的DLL、EXE、Keil LIB或MCU目标文件放进ZIP。<code>abi.c</code>由仿真自动提供，不要重复上传。当前上限为压缩文件2 MB、展开8 MB、100个文件、30个C/C++源文件。</p>
+<h2 id="section-10">10. 现有Keil/STM32/STC工程如何适配</h2>
+<p>完整嵌入式工程通常包含寄存器、DMA、ISR、串口和专用编译器语法，电脑不能直接运行这些内容。推荐保留算法，替换外设边界：</p>
+<table>
+<thead>
+<tr>
+  <th>原工程调用</th>
+  <th>仿真替代输入/输出</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>ADC读取磁信号</td>
+  <td><code>adc_l</code>、<code>adc_r</code></td>
+</tr>
+<tr>
+  <td>编码器读取与清零</td>
+  <td><code>wheel_l</code>、<code>wheel_r</code>，每5 ms计数</td>
+</tr>
+<tr>
+  <td>陀螺仪Z轴</td>
+  <td><code>gyro_z_deg_s</code></td>
+</tr>
+<tr>
+  <td>相机DMA完成标记</td>
+  <td><code>frame_new</code></td>
+</tr>
+<tr>
+  <td>相机缓冲区</td>
+  <td><code>camera_gray</code></td>
+</tr>
+<tr>
+  <td>舵机PWM</td>
+  <td><code>steer_deg</code>，单位度</td>
+</tr>
+<tr>
+  <td>电机PWM</td>
+  <td><code>use_pwm=1</code>，写<code>left_pwm/right_pwm</code></td>
+</tr>
+<tr>
+  <td>两路涵道油门</td>
+  <td><code>fan</code>需求，用于记录和显示</td>
+</tr>
+<tr>
+  <td>定时器5 ms回调</td>
+  <td>每次<code>gatecar_step</code>调用</td>
+</tr>
+</tbody>
+</table>
+<p>建议先建立一个<code>controller.c</code>适配器，调用已有PID和状态机。把主程序里的无限循环、硬件初始化和中断屏蔽移出PC构建。STC专用<code>data</code>、<code>xdata</code>等关键字需要通过条件编译处理，预编译Keil库需要源代码的PC版本。</p>
+<p>原算法分辨率不等于80×60时，应适配尺寸和透视标定。仿真不会自动证明原程序的相机DMA、中断优先级、MCU运行时或实车线束正确。</p>
+<h2 id="section-11">11. 输入和输出单位</h2>
+<h3>11.1 传感器输入</h3>
+<table>
+<thead>
+<tr>
+  <th>字段</th>
+  <th>单位与说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>dt_s</td>
+  <td>0.005秒</td>
+</tr>
+<tr>
+  <td>time_s</td>
+  <td>累计仿真秒</td>
+</tr>
+<tr>
+  <td>adc_l / adc_r</td>
+  <td>0..4095，低频包络值，不是150 kHz载波波形</td>
+</tr>
+<tr>
+  <td>wheel_l / wheel_r</td>
+  <td>本周期编码器计数</td>
+</tr>
+<tr>
+  <td>counts_per_m</td>
+  <td>每米编码器计数</td>
+</tr>
+<tr>
+  <td>gyro_z_deg_s</td>
+  <td>度/秒，符号沿用原适配层，与车辆逆时针yaw rate相反</td>
+</tr>
+<tr>
+  <td>visual_error_deg</td>
+  <td>正左负右，简化前瞻误差，±30°范围</td>
+</tr>
+<tr>
+  <td>frame_new</td>
+  <td>1表示新相机帧到达</td>
+</tr>
+<tr>
+  <td>camera_gray</td>
+  <td>80×60灰度掩膜，按行排列</td>
+</tr>
+<tr>
+  <td>arm / kill</td>
+  <td>启动首周期 / 急停输入</td>
+</tr>
+</tbody>
+</table>
+<p>速度估计可以用：</p>
+<pre><code class="language-text">左轮速度 m/s = wheel_l / (counts_per_m × dt_s)
+右轮速度 m/s = wheel_r / (counts_per_m × dt_s)
+</code></pre>
+<p>用户模式不会通过车速倍率偷偷修改编码器标定。要让自己的控制器采用<code>speed_scale</code>，需要在代码中明确使用它。</p>
+<h3>11.2 控制输出</h3>
+<table>
+<thead>
+<tr>
+  <th>字段</th>
+  <th>单位与范围</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>speed_m_s</td>
+  <td>米/秒，默认转成两轮相同开环PWM需求</td>
+</tr>
+<tr>
+  <td>steer_deg</td>
+  <td>正左负右，宿主限幅±35°</td>
+</tr>
+<tr>
+  <td>fan</td>
+  <td>0..1，映射为500..1000的电调需求，不计算真实吸地力</td>
+</tr>
+<tr>
+  <td>enabled</td>
+  <td>必须显式为true/1才能输出动力</td>
+</tr>
+<tr>
+  <td>use_pwm</td>
+  <td>为true时改用直接PWM，忽略speed_m_s</td>
+</tr>
+<tr>
+  <td>left_pwm / right_pwm</td>
+  <td>-10000..10000，有符号电机PWM</td>
+</tr>
+<tr>
+  <td>gate_state</td>
+  <td>0循迹、1准备、2磁引导、3重捕获、4离门确认</td>
+</tr>
+<tr>
+  <td>fault</td>
+  <td>0正常，1未就绪，2相机超时，3丢线，4磁失效，5门区限制，6急停</td>
+</tr>
+</tbody>
+</table>
+<p><code>speed_m_s</code>并不是已经实现的轮速闭环。如果需要测试自己的轮速PID，应使用编码器反馈和<code>use_pwm</code>直接输出PWM。</p>
+<p>宿主在急停和非零fault时归零动力。车辆仍会受电机模型惯性影响，不能把这个过程理解为真实主动刹车验证。</p>
+<h2 id="section-12">12. 怎样测试电磁门</h2>
+<h3>12.1 单门起步</h3>
+<ol>
+<li>门位选择“左圆环内”或其他单门。</li>
+<li>起跑方式选择“从选中门前1米起跑”。</li>
+<li>保持较低速度和默认噪声。</li>
+<li>选择用户代码或内置参考C核心。</li>
+<li>看断口前是否有有效磁信号，过门时有没有碰框，出口是否重新捕获白道。</li>
+<li>通过后再增加横向偏移、起始偏航和接收延迟。</li>
+</ol>
+<p>这11处门位覆盖直道、左/右圆环、S弯、回头弯、原直道、正十字出口、Ω弯、坡道出口、路障接近段、斜十字接近段。十字门位放在接近/出口位置，避免直接挡住其他分支。</p>
+<h3>12.2 全部门位</h3>
+<p>“全部可用门位”同时显示11个门，默认只激励当前附近门。当前门切换由场景理想进度调度，不是已经实现的赛事门控协议。</p>
+<p>如果改为“全部门同时激励”，接收值包含多个解析磁场叠加，可以观察邻门干扰。幅值过大可能饱和，不能简单认为越强越可靠。</p>
+<h3>12.3 通过计数代表什么</h3>
+<p>“过门11/11”是车辆外包络穿过门平面的几何计数。它不单独证明代码已经完成磁引导与白道重捕获，应结合用户报告的gate_state、相机有效性及轨迹判断。</p>
+<h2 id="section-13">13. 参数怎么调</h2>
+<table>
+<thead>
+<tr>
+  <th>参数</th>
+  <th>作用和注意点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>车速倍率</td>
+  <td>理想路线演示用于提高目标速度；用户代码是否采用由自己决定</td>
+</tr>
+<tr>
+  <td>播放倍率</td>
+  <td>只改变仿真时间推进速度，不是车辆速度参数</td>
+</tr>
+<tr>
+  <td>起始横向偏移、偏航</td>
+  <td>模拟车辆进入门区时不对中</td>
+</tr>
+<tr>
+  <td>门线圈激励A·匝</td>
+  <td>改变解析场强度，不能直接当成实物线圈电流</td>
+</tr>
+<tr>
+  <td>接收增益</td>
+  <td>改变感应幅值到ADC的比例，过大会饱和</td>
+</tr>
+<tr>
+  <td>有效幅值和门限</td>
+  <td>两路扣除零点后的有效信号门限</td>
+</tr>
+<tr>
+  <td>ADC噪声</td>
+  <td>给接收包络叠加随机扰动，随机种子固定时可复现</td>
+</tr>
+<tr>
+  <td>接收延迟</td>
+  <td>模拟磁数据到达延迟</td>
+</tr>
+<tr>
+  <td>相机延迟</td>
+  <td>推迟图像和简化视觉结果到达</td>
+</tr>
+<tr>
+  <td>断口长度</td>
+  <td>沿路线删除白道，圆环处跟随曲线</td>
+</tr>
+<tr>
+  <td>门宽、门高</td>
+  <td>用于显示和简化碰框检查</td>
+</tr>
+<tr>
+  <td>线圈前探、高度、轴角</td>
+  <td>改变接收采样位置与方向，GLB杆件外形不会重新建模</td>
+</tr>
+<tr>
+  <td>counts_per_m</td>
+  <td>编码器标定，用户程序单位换算要一致</td>
+</tr>
+<tr>
+  <td>舵机单位/度</td>
+  <td>内部指令映射，用户直接填写角度即可</td>
+</tr>
+</tbody>
+</table>
+<p>改完参数点击“应用参数并复位”。单次只改变一项，再比较轨迹和日志，较容易判断原因。</p>
+<h2 id="section-14">14. 相机掩膜怎么看</h2>
+<p>右侧80×60图像由地面道路区域投影得到。它是合成掩膜，没有真实镜头畸变、曝光变化和原始彩色图像。</p>
+<p>断口会造成白道缺失，十字会出现多个分支，圆环会产生连续曲率。你可以用它测试边线提取、补线、状态机和控制交接，但最终仍需使用真实DCXG200图像重新标定。</p>
+<p>新帧未到达时保持旧图。用户代码可以自行累计图像超时，不要把同一帧在多个5 ms周期内重复识别当成多帧确认。</p>
+<h2 id="section-15">15. CSV日志怎么分析</h2>
+<p>点击“导出CSV”，使用Excel或Python打开。CSV用UTF-8编码，包含每个仿真周期的记录。</p>
+<table>
+<thead>
+<tr>
+  <th>字段</th>
+  <th>分析用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>t、speed、steer_deg</td>
+  <td>看何时加速、转向和停止</td>
+</tr>
+<tr>
+  <td>adc_l、adc_r</td>
+  <td>看幅值、左右差和饱和</td>
+</tr>
+<tr>
+  <td>bx_uT、by_uT、bz_uT</td>
+  <td>解析模型预测场，不是实测数据</td>
+</tr>
+<tr>
+  <td>line_valid、gap_hint</td>
+  <td>对照白道丢失和重捕获</td>
+</tr>
+<tr>
+  <td>gate、fault、enabled</td>
+  <td>看状态变化及撤动力时刻</td>
+</tr>
+<tr>
+  <td>left_pwm、right_pwm</td>
+  <td>检查轮速控制和差速输出</td>
+</tr>
+<tr>
+  <td>x、y、course_progress</td>
+  <td>只在日志里辅助诊断，不作为用户控制器输入</td>
+</tr>
+</tbody>
+</table>
+<p>Python读取示例：</p>
+<pre><code class="language-python">import csv
+with open('simulation_log.csv', encoding='utf-8-sig', newline='') as f:
+    rows = list(csv.DictReader(f))
+for row in rows:
+    if int(row['fault']):
+        print('首次故障', row['t'], row['fault'])
+        break
+</code></pre>
+<p>复位会清空当前运行日志。需要比较两次测试时，先导出第一份再复位。不同浏览器标签页的仿真、导入代码和日志相互独立。</p>
+<h2 id="section-16">16. 报错与恢复</h2>
+<table>
+<thead>
+<tr>
+  <th>现象</th>
+  <th>检查方法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>双击启动后提示找不到Python</td>
+  <td>安装Python并勾选PATH，重新开终端验证python或py -3</td>
+</tr>
+<tr>
+  <td>缺少numpy/scipy/shapely</td>
+  <td>用当前解释器执行python -m pip install -r requirements.txt</td>
+</tr>
+<tr>
+  <td>pip下载失败</td>
+  <td>检查网络，保留报错，在网络恢复后重新执行安装；不要下载随机DLL替代依赖</td>
+</tr>
+<tr>
+  <td>找不到C编译器</td>
+  <td>验证gcc --version，检查PATH或CC；只用Python可以先跳过</td>
+</tr>
+<tr>
+  <td>找不到g++</td>
+  <td>安装完整GCC工具链，C++需要g++或clang++</td>
+</tr>
+<tr>
+  <td>浏览器连接失败</td>
+  <td>确认终端未关闭，查看实际端口，避免使用file://打开页面</td>
+</tr>
+<tr>
+  <td>车模载入失败</td>
+  <td>完整解压，确认web/assets/vehicle.glb存在，不要只复制HTML</td>
+</tr>
+<tr>
+  <td>页面能打开但无三维画面</td>
+  <td>使用支持WebGL的Edge/Chrome，查看页面错误，检查浏览器图形支持</td>
+</tr>
+<tr>
+  <td>Python导入提示没有step</td>
+  <td>添加step(sensors, state)函数，返回字典</td>
+</tr>
+<tr>
+  <td>ZIP提示多个入口</td>
+  <td>只保留一个controller.py/controller.c/controller.cpp入口</td>
+</tr>
+<tr>
+  <td>C编译undefined reference</td>
+  <td>将所需.c/.cpp源码一起打包，检查函数声明、定义与C/C++链接</td>
+</tr>
+<tr>
+  <td>用户代码错误/响应超时</td>
+  <td>step不得无限循环或长时间sleep；修复后重新导入</td>
+</tr>
+<tr>
+  <td>代码已导入但车不动</td>
+  <td>检查enabled、fault、速度值以及代码是否丢线后主动停车</td>
+</tr>
+<tr>
+  <td>转向方向相反</td>
+  <td>steer_deg正左负右，检查算法符号和gyro约定</td>
+</tr>
+<tr>
+  <td>点了快速整圈演示后成绩很好</td>
+  <td>该按钮切到了理想路线；重新选用户导入代码再测试</td>
+</tr>
+<tr>
+  <td>刷新后代码不见了</td>
+  <td>每个页面创建新会话，需要重新导入，原代码文件不丢失</td>
+</tr>
+<tr>
+  <td>增大速度倍率但用户车速没变</td>
+  <td>用户代码需自行采用speed_scale，或直接修改speed_m_s/PWM</td>
+</tr>
+<tr>
+  <td>圆环或Ω弯测试失败</td>
+  <td>示例没有完整元素识别，按轨迹、图像与状态逐项调试，不是软件承诺自动完赛</td>
+</tr>
+</tbody>
+</table>
+<p>代码崩溃/超时后，原工作进程会停止，需要修复并重新导入，不能只点复位期待错误程序恢复。正常暂停可以继续，故障或急停需要复位。</p>
+<h2 id="section-17">17. 推荐调试流程</h2>
+<ol>
+<li>理想演示：确认软件、地图和车模能正常显示。</li>
+<li>无门低速直道：确认自己的输出单位、方向和enabled逻辑。</li>
+<li>小偏移白道：确认循迹和转向闭环。</li>
+<li>独立直道门：实现弱磁、丢线和出口确认。</li>
+<li>圆环/Ω弯单门：测试视觉与电磁交接，避免只依赖幅值峰值。</li>
+<li>噪声/延迟/断帧：确认失效后停止及状态不误跳。</li>
+<li>全地图：逐元素调整前瞻、轮速、舵角和负压需求。</li>
+<li>实车：重新核对接线、标定、真实图像、电流、温升和有效检测距离。</li>
+</ol>
+<h2 id="section-18">18. 自测与二次开发</h2>
+<p>在项目根目录执行：</p>
+<pre><code class="language-sh">python -m unittest discover -s tests -v
+python test_multigate.py
+</code></pre>
+<p>第一条测试代码导入、Python/C等价接口、多文件ZIP、异常、超时、C崩溃和会话隔离。第二条运行地图、单门、11门整圈、速度与内置C保护回归。</p>
+<p>浏览器检查：</p>
+<pre><code class="language-sh">python -m pip install -r requirements-dev.txt
+python server.py --no-browser
+# 另开终端，在同一目录执行：
+python browser_multigate_qa.py
+</code></pre>
+<p>浏览器验证默认查找Edge/Chrome，可用<code>GATECAR_BROWSER</code>指定路径。临时截图和日志进入<code>build/</code>，不进入Git仓库。</p>
+<h2 id="section-19">19. 文件维护与更新</h2>
+<ul>
+<li>自己编写的源文件请另存到自己的代码目录，再导入仿真。</li>
+<li><code>build/user_projects/</code>是导入快照和编译产物，不应作为唯一源码备份。</li>
+<li><code>build/</code>可以在停止服务后清理，重新启动会重建。</li>
+<li><code>.venv/</code>可以在停止服务后删除，下次缺少依赖会重新安装。</li>
+<li>更新版本时解压到新目录，保留自己的控制源码和CSV日志，再重新导入。</li>
+<li>本地运行记录、用户导入代码和缓存默认不上传GitHub。</li>
+</ul>
+<h2 id="section-20">20. 仿真结果的边界</h2>
+<p>已实现的是固定步长软件在环测试。它不包含真实LC谐振Q值、接收电路频响、放大器饱和恢复、检波延迟、金属涡流、电调EMC、真实轮胎附着和气动负压。</p>
+<p>门碰撞使用400×190 mm平面车身包络，没有对前探杆和每个CAD实体做精确动力学碰撞。坡道只显示高度和俯仰，路障没有专门避障动力学。</p>
+<p>只导入自己编写或信任的代码。独立工作进程用于隔离崩溃和卡死，不是安全沙箱；代码仍有当前用户的本机程序权限。默认服务只监听本机，不要作为公网代码执行网站部署。</p>
+<p>遇到问题时，记录软件版本、操作步骤、导入语言、配置、错误文字和CSV中的首次异常时刻，便于复现。</p>
+<footer>本地教程与下载包一起提供。接口以sdk/gatecar_api.h和docs/CODE_IMPORT.md为准。</footer></article></body></html>

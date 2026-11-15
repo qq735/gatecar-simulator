@@ -1,0 +1,4 @@
+-r requirements.txt
+Pillow>=10
+websocket-client>=1.7
+mistune>=3,<4

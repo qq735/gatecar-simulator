@@ -1,0 +1,33 @@
+{
+  "date": "2026-11-15",
+  "platform": "Windows 64-bit / Python 3.14 / GCC",
+  "unit_tests": 13,
+  "scenario_checks": 24,
+  "fresh_zip_extraction_tested": true,
+  "browser": {
+    "runtime_errors": [],
+    "model_loaded": true,
+    "initial_gate_count": 11,
+    "local_ring": {
+      "status": "passed",
+      "gates": 1,
+      "local": true
+    },
+    "full_lap": {
+      "status": "passed",
+      "time": 20.335,
+      "maxSpeed": 2.1599973182410217,
+      "gates": 11,
+      "lap": 1
+    },
+    "imported_code_languages": [
+      "python",
+      "c"
+    ],
+    "chinese_manual_chapters": 20,
+    "offline_manual_verified": true,
+    "playback_multiplier": 1,
+    "viewport_1024_no_horizontal_overflow": true
+  },
+  "limits": "Software-in-loop only. Native C curved-gate failures remain explicit observations."
+}
