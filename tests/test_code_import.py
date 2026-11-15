@@ -64,9 +64,11 @@ def step(s,state):
         self.assertGreater(self.sim.step(100)['state']['speed'],.4)
 
     def test_zip_paths_and_file_types(self):
-        for files in [{'../escape.py':'x=1'},{'/tmp/controller.py':'x=1'},{'C:/controller.py':'x=1'},{'payload.exe':'x'},
-                      {'a/controller.py':'x=1','b/controller.py':'x=1'}]:
-            with self.assertRaises(ValueError):prepare_project('project.zip',project_zip(files))
+        # Windows 3.12 clock resolution can return the same ns value across rapid imports.
+        with patch('time.time_ns',return_value=42):
+            for files in [{'../escape.py':'x=1'},{'/tmp/controller.py':'x=1'},{'C:/controller.py':'x=1'},{'payload.exe':'x'},
+                          {'a/controller.py':'x=1','b/controller.py':'x=1'}]:
+                with self.assertRaises(ValueError):prepare_project('project.zip',project_zip(files))
         with self.assertRaises(ValueError):prepare_project('project.py',b'0'*2_000_001)
 
     @unittest.skipUnless(find_compiler(),'GCC/Clang required for C import')

@@ -1,7 +1,7 @@
 """Import portable Python/C controllers, execute in a bounded worker process."""
 from pathlib import Path, PurePosixPath
 import base64, ctypes, hashlib, importlib.util, io, json, math, multiprocessing as mp
-import os, subprocess, sys, time, zipfile
+import os, subprocess, sys, uuid, zipfile
 from native_core import ROOT, find_compiler, shared_compile_command
 
 MAX_UPLOAD = 2_000_000
@@ -102,7 +102,7 @@ class UserController:
 def prepare_project(filename,content):
     filename=Path(filename.replace('\\','/')).name
     if not filename or len(content)>MAX_UPLOAD:raise ValueError('代码文件为空或超过2 MB')
-    root=ROOT/'build'/'user_projects'/str(time.time_ns());root.mkdir(parents=True)
+    root=ROOT/'build'/'user_projects'/uuid.uuid4().hex;root.mkdir(parents=True)
     if filename.lower().endswith('.zip'):
         with zipfile.ZipFile(io.BytesIO(content)) as z:
             infos=z.infolist()

@@ -1,6 +1,6 @@
 """Optional portable reference controller. Never reads files outside this package."""
 from pathlib import Path
-import ctypes, hashlib, json, os, shutil, subprocess, sys, time
+import ctypes, hashlib, json, os, shutil, subprocess, sys, uuid
 
 ROOT = Path(__file__).resolve().parent
 INPUT_FIELDS = ['adc_l','adc_r','wheel_l','wheel_r','gyro_z','visual_error','visual_element','frame_new','line_valid','gap_hint','arm','kill','finish_mark']
@@ -53,7 +53,7 @@ class NativeCore:
         src = ROOT/'control_src'; paths = [src/n for n in ['CarCore.c','CarProfiles.c','CarCore.h']]
         if not all(p.is_file() for p in paths): raise RuntimeError('control_src缺少CarCore.c、CarProfiles.c或CarCore.h')
         build = ROOT/'build'; build.mkdir(exist_ok=True)
-        output = build/('reference_'+str(time.time_ns())+('.dll' if os.name=='nt' else '.dylib' if sys.platform=='darwin' else '.so'))
+        output = build/('reference_'+uuid.uuid4().hex+('.dll' if os.name=='nt' else '.dylib' if sys.platform=='darwin' else '.so'))
         cmd = shared_compile_command(compiler,[ROOT/'core_bridge.c',*paths[:2]],[src],output)
         cmd.insert(1,'-DCAR_HOST')
         r = subprocess.run(cmd,capture_output=True,text=True,encoding='utf-8',errors='replace',timeout=60)
